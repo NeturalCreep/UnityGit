@@ -1,0 +1,88 @@
+        
+        private float Cube_Height = 0;
+        //一个人物 所占用格子的高度
+        private float Cube_Width = 0;
+        //一个人物 所占用格子的宽度
+        private int Width = 11;
+        //整个屏幕的横格;
+        private int Height = 5;
+        //整个屏幕的竖格;
+
+
+        //获取屏幕实际尺寸
+        GameObject gameObject = GameObject.Find("BackGround");
+        hy = gameObject.GetComponent<Renderer>().bounds.size.y;//高度。
+
+        hx = gameObject.GetComponent<Renderer>().bounds.size.x;//宽度。
+        Cube_Height = hy / Height;
+        Cube_Width = hx / Width;
+
+
+
+
+
+//-------------------------------------------------------------------------------
+
+
+
+
+        //创建GameObject对象从Prefabs中
+        /*Name Resources下路径，x,y在阵列组的坐标,
+
+          value 面朝方向
+                 1：面朝右
+                -1：面朝左
+          Left , Right 为左上 右下的标志（空GameObject） 取得两点坐标进行
+          差值计算得GameObject对象的长宽 进行自动缩放。
+        */
+
+    GameObject Creat_Prefabs(string Name, int x, int y, int value)
+    {
+        GameObject PreFab = (GameObject)Instantiate(Resources.Load(Name));
+        PreFab.GetComponent<Transform>().position = new Vector3(-hx / 2 + Cube_Width * x + Cube_Width * (10 - y) / 10 * value, hy / 2 - Cube_Height * y, 0);
+        Transform left = PreFab.transform.GetChild(4);
+        Transform right = PreFab.transform.GetChild(3);
+        float ration = Cube_Height / Mathf.Abs(left.localPosition.y - right.localPosition.y);
+        PreFab.GetComponent<Transform>().localScale = new Vector3(ration * (7 + y) / 10, ration * (7 + y) / 10, 0);
+         if (value == -1)
+         {
+             PreFab.GetComponent<Transform>().Rotate(new Vector3(0, 180, 0));
+         }
+        return PreFab;
+    }
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------
+
+
+
+
+//不规则图形按钮监听器
+
+
+	void Awake () 
+        {
+            // 设置阈值
+            Image image = GetComponent<Image>();
+            image.alphaHitTestMinimumThreshold = 0.1f;
+        }
+
+       public void SendMessage(string str)
+    {
+
+       
+        if (str.Equals("Orange3"))
+        {
+            Map();
+        }
+    }
+private void Map(){
+  Application.LoadLevel("Map");
+}
